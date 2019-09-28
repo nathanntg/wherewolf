@@ -1,28 +1,28 @@
 {
   "name": "wherewolf",
-  "version": "1.0.3",
-  "description": "A client-side boundary service powered by GeoJSON or TopoJSON data.  Find which feature a point lies in.",
+  "version": "2.0.0",
+  "description": "A client-side boundary service powered by GeoJSON or TopoJSON data. Find which feature a point lies in.",
   "main": "wherewolf.js",
   "scripts": {
     "test": "node test/test.js"
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/veltman/wherewolf.git"
+    "url": "git://github.com/nathanntg/wherewolf.git"
   },
   "keywords": [
     "geojson",
     "point-in-polygon",
     "boundary"
   ],
-  "author": "Noah Veltman <noah@noahveltman.com> / Jenny Ye <jye225@gmail.com>",
+  "author": "Noah Veltman <noah@noahveltman.com> / Jenny Ye <jye225@gmail.com> / Nathan Perkins <nathan@nathanntg.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/veltman/wherewolf/issues"
+    "url": "https://github.com/nathanntg/wherewolf/issues"
   },
-  "homepage": "https://github.com/veltman/wherewolf",
+  "homepage": "https://github.com/nathanntg/wherewolf",
   "dependencies": {
     "rbush": "^2.0.1",
-    "topojson": "~1.6.18"
+    "topojson-client": "~3.0.0"
   }
 }
