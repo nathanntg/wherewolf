@@ -1,21 +1,22 @@
 import * as topojson from 'topojson-client';
 import RBush from 'rbush';
 
+const defaultOptions = {
+  index: true,
+  indexMaxEntriesPerNode: 16,
+};
+
 // Basic class
 // Start with empty layers
 export default function Wherewolf(options) {
-  //Defaults
-  options = options || {};
+  // store options and defaults
+  this.options = Object.assign({}, defaultOptions, options || {});
 
+  // objects for storing layers and indices
   this.layers = {};
-
-  //Object for storing layer indices
-  if (options.index) {
-    this.indices = {};
-  }
+  this.indices = {};
 
   return this;
-
 };
 
 // Add a layer
@@ -55,12 +56,12 @@ Wherewolf.prototype.add = function(name, collection, key) {
     return f;
   });
 
-  //Save features array as a layer
+  // save features array as a layer
   this.layers[name] = features;
 
-  //Add to index
-  if (this.indices) {
-    this.indices[name] = new RBush(16, ['.bbox[0][0]', '.bbox[0][1]', '.bbox[1][0]', '.bbox[1][1]']);
+  // add to index
+  if (this.options.index) {
+    this.indices[name] = new RBush(this.options.indexMaxEntriesPerNode, ['.bbox[0][0]', '.bbox[0][1]', '.bbox[1][0]', '.bbox[1][1]']);
     this.indices[name].load(features);
   }
 
@@ -96,7 +97,7 @@ Wherewolf.prototype.remove = function(layerName) {
   if (layerName in this.layers) {
     delete this.layers[layerName];
   }
-  if (this.indices && layerName in this.indices) {
+  if (layerName in this.indices) {
     delete this.indices[layerName];
   }
 
@@ -131,7 +132,7 @@ Wherewolf.prototype.find = function(point, options) {
 
   if (options.layer) { // if query for a specific layer, just return a single result
     // has index?
-    if (this.indices && options.layer in this.indices) {
+    if (options.layer in this.indices) {
       return _findLayer(point, _queryIndex(point, this.indices[options.layer]), options);
     }
 
@@ -146,7 +147,7 @@ Wherewolf.prototype.find = function(point, options) {
     // return an object with the result for each layer
     results = {};
     for (let key in this.layers) {
-      if (this.indices && key in this.indices) {
+      if (key in this.indices) {
         results[key] = _findLayer(point,_queryIndex(point,this.indices[key]),options);
       } else {
         results[key] = _findLayer(point,this.layers[key],options);
